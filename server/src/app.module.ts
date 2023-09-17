@@ -5,6 +5,8 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { CategoryModule } from "./category/category.module";
 import { User } from "./users/users.model";
 import { Category } from "./category/category.model";
+import { TransactionModule } from "./transaction/transaction.module";
+import { Transaction } from "./transaction/transaction.model";
 
 @Module({
   imports: [
@@ -18,11 +20,12 @@ import { Category } from "./category/category.model";
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Category],
+      models: [User, Category, Transaction],
       autoLoadModels: true,
     }),
     UsersModule,
     CategoryModule,
+    TransactionModule,
   ],
   controllers: [],
   providers: [],

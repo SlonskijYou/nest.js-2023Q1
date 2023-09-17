@@ -4,17 +4,19 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from "sequelize-typescript";
+import { Transaction } from "src/transaction/transaction.model";
 import { User } from "src/users/users.model";
 
-interface CategotyCreationAttrs {
+interface CategoryCreationAttrs {
   title: string;
 }
 
 @Table({ tableName: "categories" })
-export class Category extends Model<Category, CategotyCreationAttrs> {
+export class Category extends Model<Category, CategoryCreationAttrs> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -32,4 +34,7 @@ export class Category extends Model<Category, CategotyCreationAttrs> {
 
   @BelongsTo(() => User)
   user: User;
+
+  @HasMany(() => Transaction)
+  transaction: Transaction[];
 }

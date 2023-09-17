@@ -7,6 +7,7 @@ import {
   Table,
 } from "sequelize-typescript";
 import { Category } from "src/category/category.model";
+import { Transaction } from "src/transaction/transaction.model";
 
 interface UserCreationAttrs {
   email: string;
@@ -31,4 +32,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => Category)
   category: Category[];
+
+  @HasMany(() => Transaction)
+  transaction: Transaction[];
 }
