@@ -7,6 +7,7 @@ import { User } from "./users/users.model";
 import { Category } from "./category/category.model";
 import { TransactionModule } from "./transaction/transaction.module";
 import { Transaction } from "./transaction/transaction.model";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { Transaction } from "./transaction/transaction.model";
     UsersModule,
     CategoryModule,
     TransactionModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
