@@ -5,10 +5,17 @@ import { SequelizeModule } from "@nestjs/sequelize";
 import { Category } from "src/category/category.model";
 import { User } from "src/users/users.model";
 import { Transaction } from "./transaction.model";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   providers: [TransactionService],
   controllers: [TransactionController],
-  imports: [SequelizeModule.forFeature([User, Category, Transaction])],
+  imports: [
+    SequelizeModule.forFeature([User, Category, Transaction]),
+    JwtModule.register({
+      secret: process.env.PRIVATE_KEY || "SECRET",
+      signOptions: { expiresIn: "24h" },
+    }),
+  ],
 })
 export class TransactionModule {}

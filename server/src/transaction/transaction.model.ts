@@ -14,6 +14,8 @@ interface TransactionCreationAttrs {
   title: string;
   type: string;
   amount: number;
+  categoryId: number;
+  userId: number;
 }
 
 @Table({ tableName: "transaction" })
@@ -44,7 +46,7 @@ export class Transaction extends Model<Transaction, TransactionCreationAttrs> {
 
   @ForeignKey(() => Category)
   @Column({ type: DataType.INTEGER })
-  transactionId: number;
+  categoryId: number;
 
   @BelongsTo(() => Category)
   category: Category;

@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { CreateCategoryDto } from "./dto/create-category.dto";
@@ -13,9 +22,21 @@ export class CategoryController {
     return this.categoryService.categoryCreate(CategoryDto, req.user.id);
   }
 
-  @Get()
+  @Get("findall")
   @UseGuards(JwtAuthGuard)
   findAll(@Req() req) {
     return this.categoryService.findAll(req.user.id);
+  }
+
+  @Get(":id")
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param("id") id: string) {
+    return this.categoryService.findOne(+id);
+  }
+
+  @Put(":id")
+  @UseGuards(JwtAuthGuard)
+  update(@Param("id") id: string) {
+    return this.categoryService.update(+id);
   }
 }

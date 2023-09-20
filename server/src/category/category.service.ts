@@ -29,7 +29,24 @@ export class CategoryService {
   async findAll(id: number) {
     const findall = await this.categoryRepository.findAll({
       where: { userId: id },
+      include: ["transaction"],
     });
+
     return findall;
   }
+
+  async findOne(id: number) {
+    const oneCategory = await this.categoryRepository.findOne({
+      where: { id: id },
+      include: ["transaction", "user"],
+    });
+
+    if (!oneCategory) {
+      throw new BadRequestException("Данной категории не существует");
+    }
+
+    return oneCategory;
+  }
+
+  async update(id: number) {}
 }
