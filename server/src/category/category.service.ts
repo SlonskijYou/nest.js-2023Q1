@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { Category } from "./category.model";
 import { InjectModel } from "@nestjs/sequelize";
 import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
 
 @Injectable()
 export class CategoryService {
@@ -29,7 +30,7 @@ export class CategoryService {
   async findAll(id: number) {
     const findall = await this.categoryRepository.findAll({
       where: { userId: id },
-      include: ["transaction"],
+      include: ["transaction", "user"],
     });
 
     return findall;
@@ -48,5 +49,19 @@ export class CategoryService {
     return oneCategory;
   }
 
-  async update(id: number) {}
+  async update(id: number, updateDto: UpdateCategoryDto, userId: number) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: id, userId: userId },
+    });
+
+    if (!category) {
+      throw new BadRequestException("Данной категории не существует");
+    }
+
+    await this.categoryRepository.update(updateDto, {
+      where: { id: id },
+    });
+
+    return await this.categoryRepository.findOne({ where: { id: id } });
+  }
 }

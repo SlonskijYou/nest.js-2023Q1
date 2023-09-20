@@ -1,4 +1,3 @@
-export class CreateCategoryDto {
+export class UpdateCategoryDto {
   title: string;
-  userId: number;
 }

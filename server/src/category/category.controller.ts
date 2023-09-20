@@ -11,6 +11,7 @@ import {
 import { CategoryService } from "./category.service";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
 
 @Controller("category")
 export class CategoryController {
@@ -36,7 +37,11 @@ export class CategoryController {
 
   @Put(":id")
   @UseGuards(JwtAuthGuard)
-  update(@Param("id") id: string) {
-    return this.categoryService.update(+id);
+  update(
+    @Param("id") id: string,
+    @Body() updateDto: UpdateCategoryDto,
+    @Req() req
+  ) {
+    return this.categoryService.update(+id, updateDto, req.user.id);
   }
 }
