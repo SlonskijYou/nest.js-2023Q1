@@ -13,6 +13,7 @@ import { User } from "src/users/users.model";
 
 interface CategoryCreationAttrs {
   title: string;
+  userId: number;
 }
 
 @Table({ tableName: "categories" })

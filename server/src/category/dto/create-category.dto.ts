@@ -1,1 +1,4 @@
-export class CreateUserDto {}
+export class CreateCategoryDto {
+  title: string;
+  userId: number;
+}
