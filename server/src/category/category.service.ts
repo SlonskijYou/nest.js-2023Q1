@@ -36,9 +36,9 @@ export class CategoryService {
     return findall;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
     const oneCategory = await this.categoryRepository.findOne({
-      where: { id: id },
+      where: { id: id, userId: userId },
       include: ["transaction", "user"],
     });
 
@@ -62,6 +62,24 @@ export class CategoryService {
       where: { id: id },
     });
 
-    return await this.categoryRepository.findOne({ where: { id: id } });
+    return await this.categoryRepository.findOne({
+      where: { id: id, userId: userId },
+    });
+  }
+
+  async delete(id: number, userId: number) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: id, userId: userId },
+    });
+
+    if (!category) {
+      throw new BadRequestException("Данной категории не существует");
+    }
+
+    await this.categoryRepository.destroy({
+      where: { id: id, userId: userId },
+    });
+
+    return "Категория удалена";
   }
 }

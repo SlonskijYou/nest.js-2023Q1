@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -12,27 +13,28 @@ import { CategoryService } from "./category.service";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { User } from "src/users/users.model";
 
 @Controller("category")
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
-  @Post()
+  @Post("createCategory")
   @UseGuards(JwtAuthGuard)
   create(@Body() CategoryDto: CreateCategoryDto, @Req() req) {
-    return this.categoryService.categoryCreate(CategoryDto, req.user.id);
+    return this.categoryService.categoryCreate(CategoryDto, +req.user.id);
   }
 
   @Get("findall")
   @UseGuards(JwtAuthGuard)
   findAll(@Req() req) {
-    return this.categoryService.findAll(req.user.id);
+    return this.categoryService.findAll(+req.user.id);
   }
 
   @Get(":id")
   @UseGuards(JwtAuthGuard)
-  findOne(@Param("id") id: string) {
-    return this.categoryService.findOne(+id);
+  findOne(@Param("id") id: string, @Req() req) {
+    return this.categoryService.findOne(+id, +req.user.id);
   }
 
   @Put(":id")
@@ -42,6 +44,12 @@ export class CategoryController {
     @Body() updateDto: UpdateCategoryDto,
     @Req() req
   ) {
-    return this.categoryService.update(+id, updateDto, req.user.id);
+    return this.categoryService.update(+id, updateDto, +req.user.id);
+  }
+
+  @Delete(":id")
+  @UseGuards(JwtAuthGuard)
+  delete(@Param("id") id: string, @Req() req) {
+    return this.categoryService.delete(+id, +req.user.id);
   }
 }
