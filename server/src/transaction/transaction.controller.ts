@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from "@nestjs/common";
@@ -29,7 +31,7 @@ export class TransactionController {
     return this.transactionService.findall(+req.user.id);
   }
 
-  @Get("findone/:id")
+  @Get("")
   @UseGuards(JwtAuthGuard)
   findone(@Param("id") id: number, @Req() req) {
     return this.transactionService.findone(id, +req.user.id);
@@ -45,9 +47,29 @@ export class TransactionController {
     return this.transactionService.update(+id, updateDto, +req.user.id);
   }
 
-  @Get("limit")
+  @Delete(":id")
   @UseGuards(JwtAuthGuard)
-  findlimit(@Req() req) {
-    return this.transactionService.findAllWithPagination(+req.user.id);
+  delete(@Param("id") id: string, @Req() req) {
+    return this.transactionService.destroy(+id, +req.user.id);
+  }
+
+  @Get("pagination")
+  @UseGuards(JwtAuthGuard)
+  findlimit(
+    @Req() req,
+    @Query("page") page: number = 1,
+    @Query("limit") limit: number = 3
+  ) {
+    return this.transactionService.findAllWithPagination(
+      +req.user.id,
+      +page,
+      +limit
+    );
+  }
+
+  @Get(":type/find")
+  @UseGuards(JwtAuthGuard)
+  findAllByType(@Req() req, @Param("type") type: string) {
+    return this.transactionService.findAllByType(+req.user.id, type);
   }
 }

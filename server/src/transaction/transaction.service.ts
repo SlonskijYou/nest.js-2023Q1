@@ -18,6 +18,15 @@ export class TransactionService {
 
   async create(transactionDto: CreateTransactionDto, id: number) {
     await this.categoryService.findOne(transactionDto.categoryId, id);
+
+    if (
+      await this.transactionRepository.findOne({
+        where: { title: transactionDto.title, userId: id },
+      })
+    ) {
+      throw new BadRequestException("Данная транзакция уже существует");
+    }
+
     const create = await this.transactionRepository.create({
       title: transactionDto.title,
       type: transactionDto.type,
@@ -68,14 +77,41 @@ export class TransactionService {
     });
   }
 
-  async findAllWithPagination(id: number) {
+  async destroy(id: number, userId: number) {
+    const findtransaction = await this.transactionRepository.findOne({
+      where: { id: id, userId: userId },
+    });
+
+    if (!findtransaction) {
+      throw new NotFoundException("Транзакция не найдена");
+    }
+
+    await this.transactionRepository.destroy({
+      where: { id: id, userId: userId },
+    });
+
+    return "Транзакция удалена!";
+  }
+
+  async findAllWithPagination(id: number, page: number, limit: number) {
+    let offset = 0 + (page - 1) * limit;
     const findLimitTransaction = await this.transactionRepository.findAll({
       where: { userId: id },
       order: [["createdAt", "DESC"]],
-      limit: +1,
-      offset: +1,
+      limit: limit,
+      offset: offset,
     });
 
     return findLimitTransaction;
+  }
+
+  async findAllByType(id: number, type: string) {
+    const transaction = await this.transactionRepository.findAll({
+      where: { userId: id, type: type },
+    });
+
+    const total = transaction.reduce((acc, obj) => acc + obj.amount, 0);
+
+    return total;
   }
 }
